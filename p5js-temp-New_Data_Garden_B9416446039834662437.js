@@ -11,6 +11,7 @@ y = 0;
 let movement = 0;
 let spin = 0;
 let beeAngle = 0;
+let petals = 8;
 
 let daisy, leafL, leafR, lemon, lemonStef, cherry, sun, cloud, bee, croissant;
 
@@ -87,9 +88,7 @@ image(sun, sunMouseX, 45, 120, 120);
       push();
       translate(today * (windowWidth/40), Ground - y - 30);
       rotate(spin);
-      imageMode(CENTER);
-      image(daisy, 0, 0);
-      daisy.resize(60, 0);
+ drawFlower("white", 0, 0, 20);
       pop();
       spin = spin + 0.1;
       y = 0;
@@ -277,4 +276,21 @@ function cherryHover() {
   noStroke();
   fill("red");
   ellipse(mouseX+60, mouseY+20, 30, 30);
+}
+
+function drawFlower(petalColour, flowerX, flowerY, size) {
+
+  push();
+  noStroke();
+  translate(flowerX,flowerY);
+    // petals
+  for (let i = 0; i < petals; i++) {
+    fill(petalColour);
+    ellipse(size/2, 0, size-10, size-10);
+    rotate(360/petals);
+  }
+
+  fill("orange");
+  ellipse(0, 0, size, size);
+  pop();
 }
