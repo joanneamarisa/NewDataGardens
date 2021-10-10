@@ -1,14 +1,12 @@
-let table;
+let table; // Data counting variables
 let listLength;
 let date;
 let today;
 
 let JoCount, StefCount;
-
-let night;
-
 y = 0;
-let movement = 0;
+
+let movement = 0; // Variables for images, graphics, customising elements
 let spin = 0;
 let beeAngle = 0;
 let petals = 8;
@@ -31,11 +29,11 @@ function preload() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight + 550);
-  night = createGraphics(windowWidth, windowHeight + 550);
+  
   listLength = table.getRowCount();
-  console.log(listLength);
   date = table.getString(100, "DATE");
   today = date;
+  
   frameRate(15);
   angleMode(DEGREES);
 }
@@ -46,14 +44,13 @@ function draw() {
    
   background(209, 237, 250); 
 
-
   //clouds
   
   drawCloud(15, 200);
   drawCloud(120, 500);
   drawCloud(300, 360);
 
- // sun-to-moon
+ // sun
  
   let sunMouseX = constrain(mouseX, 100, windowWidth-100);
 image(sun, sunMouseX, 45, 120, 120);
@@ -78,11 +75,9 @@ image(sun, sunMouseX, 45, 120, 120);
 
   for (let i = 0; i < listLength; i++) {
     date = table.getString(i, "DATE");
-    console.log(date);
-
     let texts = table.getString(i, "MESSAGE");
 
-     // Daisies
+     // daisies
 
     if (today != date) {
       push();
@@ -95,6 +90,7 @@ image(sun, sunMouseX, 45, 120, 120);
     }
 
     // Numbers (dates)
+    
     noStroke();
     fill(0);
     let flowerSpacing = windowWidth/40;
@@ -103,16 +99,16 @@ image(sun, sunMouseX, 45, 120, 120);
     textSize(15);
     text(date, date * flowerSpacing, Ground + 30);
 
+    // Stems
+
     today = date;
     y += 9;
     let Stem = Ground - y;
-
-    // Stems
     
     push();
     stroke(94, 119, 3);
     strokeWeight(2.4);
-    line(date * flowerSpacing, Stem+10, date * flowerSpacing, Stem - 20);
+    line(i * flowerSpacing, Stem+10, i * flowerSpacing, Stem - 20);
     pop();
 
     stroke(0);
@@ -121,19 +117,8 @@ image(sun, sunMouseX, 45, 120, 120);
     // Leaves & fruits
 
     let Person = table.get(i, "SENDER");
-
-    // stef is left, jo is right
-    fill(255);
-    if (Person === "Joanne Amarisa") {
-      image(leafR, date * flowerSpacing - 4, Stem-10, 20, 20);
-      //ellipse(date * flowerSpacing - 4, Stem, 10, 10);
-    } else if (Person === "Stefeny Cheng") {
-      image(leafL, date * flowerSpacing - 18, Stem-10, 20, 20);
-      //ellipse(date * flowerSpacing + 4, Stem, 10, 10);
-    }
-
-    //Hover function
     
+    // Hover radiuses
     var JoLeaf = {
     x:
     date * flowerSpacing - 4,
@@ -142,14 +127,7 @@ image(sun, sunMouseX, 45, 120, 120);
     diameter:
     20
   }
-
-  if (mouseX >= JoLeaf.x && mouseX <=JoLeaf.x + 20 && mouseY >= Stem-5 && mouseY <= Stem) {
-    textHoverJo();
-    text(texts, mouseX + 15, mouseY - 30, 140, 90);
-  }
-
-  //StefLeaf Hover
-  var StefLeaf = {
+    var StefLeaf = {
   x:
   date * flowerSpacing - 18,
   y:
@@ -157,11 +135,24 @@ image(sun, sunMouseX, 45, 120, 120);
   diameter:
   20
 }
-
+    
+    if (Person === "Joanne Amarisa") {
+      image(leafR, date * flowerSpacing - 4, Stem-10, 20, 20);
+      
+      // hover function
+        if (mouseX >= JoLeaf.x && mouseX <=JoLeaf.x + 20 && mouseY >= Stem-5 && mouseY <= Stem && Person === "Joanne Amarisa") {
+    textHoverJo();
+    text(texts, mouseX + 15, mouseY - 30, 140, 90);
+          
+  }
+} else if (Person === "Stefeny Cheng") {
+      image(leafL, date * flowerSpacing - 18, Stem-10, 20, 20);
+  
 if (mouseX >= StefLeaf.x && mouseX <=StefLeaf.x + 20 && mouseY >= Stem-5 && mouseY <= Stem) {
   textHoverStef();
   text(texts, mouseX -165, mouseY - 90, 140, 90);
 }
+    }
 
 let Reacts = table.get(i, "REACT");
 
@@ -183,7 +174,6 @@ if (Reacts === "TRUE") {
 if (mouseX >= cherries.x-10 && mouseX <=cherries.x + 10 && mouseY >= Stem-10 && mouseY <= Stem+10) {
   cherryHover();
 }
-//ellipse(date * flowerSpacing, Stem, 10, 10);
 }
 
 let JoCaps = table.get(i, "JOCAPS");
@@ -211,7 +201,8 @@ line(0, Ground, windowWidth, Ground);
 pop();
 }
 
-// bee
+  // bee
+  
 push();
 translate(mouseX+20, mouseY-20);
 let beeShakeX = random (5);
@@ -220,11 +211,13 @@ translate(beeShakeX, beeShakeY);
 image(bee, 0, 0, 20, 20);
 beeAngle= beeAngle + 1;
 pop();
-//fill("yellow");
-//ellipse(mouseX + 20, mouseY + 20, 15, 15);
+
 }
 
 function drawCloud(cloudX, cloudY) {
+  
+  // cloud function
+  
   let positionX = cloudX + movement;
 
   if (positionX >= windowWidth) {
@@ -232,6 +225,9 @@ function drawCloud(cloudX, cloudY) {
     movement = 0;
   }
   push();
+  
+  // geometric
+  
   //fill(255);
   translate(positionX, cloudY);
   //ellipse(20, 0, 80);
@@ -239,7 +235,11 @@ function drawCloud(cloudX, cloudY) {
   //ellipse(60, -20, 70);
   //fill(bgColour);
   //rect(-40, 0, 200, 50);
+  
+  // emoji
+  
   image(cloud, 20, 0, 90, 90);
+  
   movement = movement + 0.6;
 
   pop();
@@ -249,6 +249,8 @@ function drawCloud(cloudX, cloudY) {
 // resizeCanvas(windowWidth, windowHeight);
 // draw();
 //}
+
+// text hover functions
 
 function textHoverJo() {
   noStroke();
@@ -278,11 +280,14 @@ function cherryHover() {
   ellipse(mouseX+60, mouseY+20, 30, 30);
 }
 
+// flower function
+
 function drawFlower(petalColour, flowerX, flowerY, size) {
 
   push();
   noStroke();
   translate(flowerX,flowerY);
+  
     // petals
   for (let i = 0; i < petals; i++) {
     fill(petalColour);
